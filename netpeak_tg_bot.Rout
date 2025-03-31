@@ -1,0 +1,464 @@
+
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+в„№ Set SSL connection timeout to 600 sec
+[Previously saved workspace restored]
+
+> # netpeak bi bot
+> library(telegram.bot)
+> library(RSQLite)
+> library(DBI)
+> library(taskscheduleR)
+> library(dplyr)
+
+Attaching package: 'dplyr'
+
+The following objects are masked from 'package:stats':
+
+    filter, lag
+
+The following objects are masked from 'package:base':
+
+    intersect, setdiff, setequal, union
+
+> library(tidyr)
+> library(stringr)
+> library(readr)
+> library(ppcLoader)
+РџСЂРёРІРµС‚ Alsey!
+РџР°РєРµС‚ rpup РІРµСЂСЃРёРё 0.48.3 РїРѕРґРєР»СЋС‡РµРЅ.
+Р”Р»СЏ РЅР°С‡Р°Р»Р° СЂР°Р±РѕС‚С‹ СЃ Р±Р°Р·РѕР№ РџРЈРџР° СѓСЃС‚Р°РЅРѕРІРёС‚Рµ СЃР»РµРґСѓСЋС‰РёРµ РЅРµРѕР±С…РѕРґРёРјС‹Рµ РѕРїС†РёРё 
+
+# pup options
+options(pup.user     = 'РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ Р±Р°Р·С‹ РґР°РЅРЅС‹С…',
+        pup.password = 'РїР°СЂРѕР»СЊ РґР»СЏ РїРѕРґРєР»СЋС‡РµРЅРёСЏ Рє Р±Р°Р·Рµ РґР°РЅРЅС‹С…')
+вњ” Setting client.id from C:/Users/Alsey/AppData/Local/R/win-library/4.4/ppcLoader/client_id.json
+> library(configr)
+> library(httr)
+> library(purrr)
+
+Attaching package: 'purrr'
+
+The following object is masked from 'package:base':
+
+    %||%
+
+> library(lubridate)
+
+Attaching package: 'lubridate'
+
+The following objects are masked from 'package:base':
+
+    date, intersect, setdiff, union
+
+> library(future)
+> library(promises)
+> 
+> Sys.setlocale("LC_CTYPE", "russian")
+[1] "Russian_Russia.1251"
+Warning message:
+In Sys.setlocale("LC_CTYPE", "russian") :
+  using locale code page other than 65001 ("UTF-8") may cause problems
+> 
+> # Включаем параллельный план вычислений
+> future::plan('multisession')
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+> 
+> # create bot instance
+> updater <- Updater(token = bot_token("Netpeak BI Bot"))
+> 
+> # очищаем старые обновления
+> updater$bot$clean_updates()
+> 
+> # имя бота
+> botname <- updater$bot$getMe()$username
+> 
+> # config
+> cfg <- read.config(here::here('config.cfg'))
+> 
+> # Read function
+> source(here::here('db_bot_function.R'))
+> source(here::here('logger.R'))
+> 
+> # сообщаем о том, что бот вклчючен
+> bot_start_time <- Sys.time()
+> 
+> ## start session
+> lg$log(level = 'sessions',
++        entities = FALSE)
+Warning message:
+In as.data.table.list(values) :
+  Item 5 has 0 rows but longest item has 1; filled with NA
+> 
+> # Commands #####################
+> bot_methods <- dir(here::here("R"))
+> for (method in bot_methods) {
++   print(here::here('R', method))
++   source(here::here('R', method))
++ }
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/answer_cb.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/chat_id.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/cmd.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/data_reload.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/dir.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/find_users_method.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/forget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_file.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_ip.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_template.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/help.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/privilegies.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/quite_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu_old.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/running_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/start.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/stop.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_list.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_search.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/test.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/thanks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/unforget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/update_db.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/ya_auth.R"
+> 
+> updater$bot$sendMessage(chat_id = cfg$info_chat$chat_id,
++                         text = str_glue('*Бот запущен* в {bot_start_time}\n\nid сессии: {get_session_id()}\nсервер: {get_ip()}'),
++                         parse_mode = 'Markdown')
+> 
+> # ####################################
+> # Filters  ###########################
+> print(here::here('filters.R'))
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/filters.R"
+> source(here::here('filters.R'))
+> 
+> # Handlers #####################
+> ## command hadlers
+> source(here::here('handlers.R'))
+> 
+> # Add hadlesra to updater ######
+> updater <-
++   updater +
++      start_handler +
++      chat_id_handler +
++      tasks_handler +
++      running_tasks_h +
++      m_tasks_handler +
++      run_handler +
++      run_menu_handler +
++      m_run_menu_handler +
++      forget_handler +
++      unforget_handler +
++      quite_tasks_handler +
++      m_quite_tasks_handler +
++      task_list_handler +
++      m_task_list_handler +
++      run_menu_old_h +
++      inline_handler +
++      m_chat_id_handler +
++      task_info_handler +
++      task_search_handler +
++      h_reloader +
++      auth_handler +
++      get_code_handler +
++      m_test_handler +
++      help_handler +
++      m_help +
++      stop_habler +
++      update_db_handler +
++      remove_priv_handler +
++      add_priv_handler +
++      add_priv_by_id_h +
++      remove_priv_by_id_h +
++      get_users_handler +
++      find_users_handler +
++      get_user_priv_h +
++      m_thanks +
++      h_dir +
++      h_get_file +
++      h_get_template +
++      m_template +
++      h_cmd +
++      h_get_user_info
+> 
+> ##################
+> # start bot
+> tryCatch(
++   expr = updater$start_polling(),
++   error = function(err) {
++     
++     # выключаем многопоточный режим
++     future::plan('sequential')
++ 
++     # время падения бота
++     bot_crash_time <- Sys.time()
++     bot_work_time  <- difftime(bot_crash_time, bot_start_time,units =  'mins')
++ 
++     # loging
++     update <- updater$bot$get_updates(offset = -1)
++     update_name <- paste0('upd_', get_session_id(), '___', str_replace_all(Sys.time(), '\\:|\\ |-', replacement = '_'), '.rds')
++ 
++     # save last update to rds file
++     saveRDS(update, file = paste0('error_updater\\', update_name))
++ 
++     # get message data
++     msg    <- update[[1]]$effective_message()
++ 
++     ## write error
++     lg$error('Critical Error',
++              session_id   = get_session_id(),
++              message_id   = msg$message_id,
++              error_text   = err$message,
++              stop_reason  = "error",
++              chat_id      = update[[1]]$from_chat_id(),
++              user_id      = update[[1]]$from_user_id(),
++              msg_text     = msg$text,
++              session_duratin_min = round(bot_work_time, 2),
++              last_update_file = update_name,
++              session_start_at = bot_start_time,
++              entities     = FALSE)
++ 
++     # бот для оповещения
++     bot <- Bot(token = bot_token("Netpeak BI Bot"))
++     # чат для оповещения
++     chat_id <- cfg$info_chat$chat_id
++ 
++     message("ID инфо чата: ", chat_id)
++ 
++     # сообщение
++     msg <- str_glue("*Бот упал*: _{err$message}_ {bot_crash_time}, общее время работы бота составило {round(bot_work_time, 2)} (мин.).")
++ 
++     bot$sendMessage(chat_id = chat_id,
++                     text = msg,
++                     parse_mode = 'Markdown')
++ 
++     # не надо останавливать polling
++     #updater$stop_polling()
++     # очищаем всё чтов бота прилетело
++     updater$bot$clean_updates()
++ 
++     # чат для оповещения
++     chat_id <- cfg$info_chat$chat_id
++ 
++     # информация о том, что бот будет перезапущен
++     bot$sendMessage(chat_id = chat_id,
++                     text = str_glue('*Перезапускаю бота* в {Sys.time()}'),
++                     parse_mode = 'Markdown')
++ 
++     # перезапускаем задачу
++     # taskscheduler_runnow('alsey\als_tg_bot')
++ 
++     # очищаем рабочее окружение
++     rm(list = ls())
++ 
++     # перезапускаем скрипт бота
++     source('netpeak_tg_bot.R')
++ 
++   },
++   finally = {
++ 
++     # останавливаем пулинг
++     updater$stop_polling()
++ 
++   }
++ )
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_diacity_netpeak_core_employee_info".
+SUCCESS: Attempted to run the scheduled task "clarkson\netpeak_ua\bi\clk_bi_ps_profitability_dashboard_general_request".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_diacity_group_employee_info".
+ERROR: The system cannot find the file specified.
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_diacity_group_employee_info".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_fin_import_salary_to_itenterprise".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_diacity_group_employee_info".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_diacity_netpeak_core_employee_info".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\pm_sale_dept\als_pmtl_team_salary_export".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\pm_sale_dept\als_pm_map_load_cl".
+SUCCESS: Attempted to run the scheduled task "persey\core\per_employees_bd_anniversaries".
+SUCCESS: Attempted to run the scheduled task "bulka\blk_collecting_planned_budgets_in_a_database_with_PPC_project_statistics_Nlo".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\als_chat_stat_bot".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\alliance\als_alliance_bot".
+ID инфо чата: -1001315145433
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+Replacing existing log levels 'sessions (75), stop (80)' with 'sessions (75), stop (80)'
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/answer_cb.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/chat_id.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/cmd.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/data_reload.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/dir.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/find_users_method.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/forget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_file.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_ip.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_template.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/help.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/privilegies.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/quite_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu_old.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/running_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/start.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/stop.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_list.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_search.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/test.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/thanks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/unforget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/update_db.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/ya_auth.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/filters.R"
+SUCCESS: Attempted to run the scheduled task "bulka\blk_tg_bot_kz".
+SUCCESS: Attempted to run the scheduled task "persey\core\per_employees_bd_anniversaries".
+SUCCESS: Attempted to run the scheduled task "bulka\blk_collecting_planned_budgets_in_a_database_with_PPC_project_statistics_Nlo".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_auto_weekly_pf_report".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_fin_import_salary_to_itenterprise".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_fin_import_salary_to_itenterprise".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_auto_weekly_pf_report".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_fin_import_salary_to_itenterprise_inweb".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_auto_weekly_pf_report".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\me\als_me_tg_cran".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_fin_import_salary_to_itenterprise_inweb".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_ksu_archive_tasks_daily_upd".
+ID инфо чата: -1001315145433
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+Replacing existing log levels 'sessions (75), stop (80)' with 'sessions (75), stop (80)'
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/answer_cb.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/chat_id.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/cmd.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/data_reload.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/dir.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/find_users_method.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/forget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_file.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_ip.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_template.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/help.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/privilegies.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/quite_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu_old.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/running_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/start.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/stop.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_list.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_search.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/test.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/thanks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/unforget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/update_db.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/ya_auth.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/filters.R"
+ID инфо чата: -1001315145433
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+в„№ Set SSL connection timeout to 600 sec
+Replacing existing log levels 'sessions (75), stop (80)' with 'sessions (75), stop (80)'
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/answer_cb.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/chat_id.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/cmd.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/data_reload.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/dir.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/find_users_method.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/forget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_file.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_ip.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_template.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/get_user_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/help.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/privilegies.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/quite_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/run_menu_old.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/running_tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/start.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/stop.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_info.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_list.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/task_search.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/tasks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/test.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/thanks.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/unforget.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/update_db.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/R/ya_auth.R"
+[1] "C:/scripts/alsey/netpeak_core/nc_analytics_team/telegram_bot/filters.R"
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_im_workload_digest".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_ksu_archive_tasks_daily_upd".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_daily_digest_ads_service".
+SUCCESS: Attempted to run the scheduled task "bulka\blk_cross_sales_data".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_fb_spend_limit_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_fb_spend_limit_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_googleads_spend_limit_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_im_workload_digest".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_pm_workload_dgs".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_ste_salary_digest_by_dept".
+SUCCESS: Attempted to run the scheduled task "ashel\ash_digest_not_sent_documents".
+SUCCESS: Attempted to run the scheduled task "ashel\ash_digest_changes_ppc_olx".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_ste_salary_digest_by_dept".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_daily_digest_ads_service".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\support_team\als_jira_to_bq".
+SUCCESS: Attempted to run the scheduled task "ashel\ash_custom_field_update".
+SUCCESS: Attempted to run the scheduled task "bulka\blk_copywriting_order_dashboard_parser_Hayya".
+SUCCESS: Attempted to run the scheduled task "toffie\tof_ksu_archive_tasks_daily_upd".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\fin_dept\als_bulgaria_payment_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\stefan\als_stef_fb_spend_limit_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\netpeak_agency\netpeak_agency_ua\als_stef_fb_spend_limit_checker".
+SUCCESS: Attempted to run the scheduled task "alsey\old_server\analytics\als_standup_reminder".
