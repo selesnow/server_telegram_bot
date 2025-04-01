@@ -88,6 +88,8 @@ url <- paste0("https://api.telegram.org/bot", token, "/sendMessage")
 
 if (!grepl('--test', x = commit_raw, ignore.case = T)) {
   str('str 90')
+  print(message)
+  cat(message)
   response <- request(url) |>
     req_body_form(
       chat_id = chat_id,
