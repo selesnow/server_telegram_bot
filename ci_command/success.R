@@ -73,9 +73,9 @@ escape_markdown <- function(text) {
 # Создание сообщения
 message <- paste0(
   "🚀 *Обновление Telegram бота отдела аналитики!*\n\n",
-  #"_Что было доработано:_\n\n",
-  escape_markdown(commit_raw), "\n\n"
-  #"● Автор: ", author, "\n",
+  "_Что было доработано:_\n\n",
+  escape_markdown(commit_raw), "\n\n"б
+  "● Автор: ", author, "\n"
   #"● Ветка: ", branch, "\n",
   #"● *Pipeline *Pipeline:* [#", pipeline_id, "](", pipeline_url, ")\n\n"
   #"#bot\n"
