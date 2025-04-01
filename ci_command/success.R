@@ -9,9 +9,9 @@ library(httr2)
 gitlab_token <- Sys.getenv("GITLAB_PAT")
 project_id <- Sys.getenv("CI_PROJECT_ID")
 commit_sha <- Sys.getenv("CI_COMMIT_SHA")
-
+print('str 12')
 gitlab_url <- paste0("https://git.netpeak.net/api/v4/projects/", project_id, "/repository/commits/", commit_sha)
-
+print('str 14')
 commit_raw <- tryCatch({
   response <- request(gitlab_url) |>
     req_headers("PRIVATE-TOKEN" = gitlab_token) |>
@@ -26,14 +26,14 @@ commit_raw <- tryCatch({
 }, error = function(e) {
   "Ошибка при запросе API GitLab"
 })
-
+print('str 29')
 # Подготовка данных
 status <- Sys.getenv("CI_JOB_STATUS")
 author <- Sys.getenv("GITLAB_USER_NAME")
 branch <- Sys.getenv("CI_COMMIT_REF_NAME")
 pipeline_id <- Sys.getenv("CI_PIPELINE_ID")
 pipeline_url <- Sys.getenv("CI_PIPELINE_URL")
-
+print('str 36')
 escape_markdown <- function(text) {
   # Список символов для экранирования
   special_chars <- c("_", "*")
@@ -69,7 +69,7 @@ escape_markdown <- function(text) {
   
   return(result)
 }
-
+print('str 72')
 # Создание сообщения
 message <- paste0(
   "???? *Обновление Telegram бота отдела аналитики!*\n\n",
@@ -86,7 +86,7 @@ token <- Sys.getenv("TG_BOT_TOKEN")
 chat_id <- Sys.getenv("TG_CHAT_ID")
 url <- paste0("https://api.telegram.org/bot", token, "/sendMessage")
 
-
+print('str 89')
 if (!grepl('--test', x = commit_raw, ignore.case = T)) {
   
   response <- request(url) |>
