@@ -26,7 +26,7 @@ commit_raw <- tryCatch({
 }, error = function(e) {
   "Ошибка при запросе API GitLab"
 })
-
+str('str 29')
 # Подготовка данных
 status <- Sys.getenv("CI_JOB_STATUS")
 author <- Sys.getenv("GITLAB_USER_NAME")
@@ -87,7 +87,7 @@ chat_id <- Sys.getenv("TG_CHAT_ID")
 url <- paste0("https://api.telegram.org/bot", token, "/sendMessage")
 
 if (!grepl('--test', x = commit_raw, ignore.case = T)) {
-  
+  str('str 90')
   response <- request(url) |>
     req_body_form(
       chat_id = chat_id,
