@@ -3,3 +3,4 @@ telegram_bot.Rproj
 .Rhistory
 *.Rout
 error_updater/*
+bot_db.db
