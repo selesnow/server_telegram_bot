@@ -1,21 +1,17 @@
-# Установка необходимых пакетов
+# РЈСЃС‚Р°РЅРѕРІРєР° РЅРµРѕР±С…РѕРґРёРјС‹С… РїР°РєРµС‚РѕРІ
 if (!requireNamespace("httr2", quietly = TRUE)) {
   install.packages("httr2", repos = "https://cran.r-project.org", quiet = TRUE)
 }
 
-# Получаем сообщение коммита через API GitLab
+# РџРѕР»СѓС‡Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ РєРѕРјРјРёС‚Р° С‡РµСЂРµР· API GitLab
 library(httr2)
 
 gitlab_token <- Sys.getenv("GITLAB_PAT")
 project_id <- Sys.getenv("CI_PROJECT_ID")
 commit_sha <- Sys.getenv("CI_COMMIT_SHA")
-print('str 12')
+
 gitlab_url <- paste0("https://git.netpeak.net/api/v4/projects/", project_id, "/repository/commits/", commit_sha)
-print('str 14')
-print(project_id)
-print(commit_sha)
-print(gitlab_url)
-print(gitlab_token)
+
 commit_raw <- tryCatch({
   response <- request(gitlab_url) |>
     req_headers("PRIVATE-TOKEN" = gitlab_token) |>
@@ -25,48 +21,47 @@ commit_raw <- tryCatch({
     json <- resp_body_json(response)
     json$message
   } else {
-    "Не удалось получить коммит через API"
+    "РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕР»СѓС‡РёС‚СЊ РєРѕРјРјРёС‚ С‡РµСЂРµР· API"
   }
 }, error = function(e) {
-  "Ошибка при запросе API GitLab"
+  "РћС€РёР±РєР° РїСЂРё Р·Р°РїСЂРѕСЃРµ API GitLab"
 })
-print(commit_raw)
-print('str 29')
-# Подготовка данных
+
+# РџРѕРґРіРѕС‚РѕРІРєР° РґР°РЅРЅС‹С…
 status <- Sys.getenv("CI_JOB_STATUS")
 author <- Sys.getenv("GITLAB_USER_NAME")
 branch <- Sys.getenv("CI_COMMIT_REF_NAME")
 pipeline_id <- Sys.getenv("CI_PIPELINE_ID")
 pipeline_url <- Sys.getenv("CI_PIPELINE_URL")
-print('str 36')
+
 escape_markdown <- function(text) {
-  # Список символов для экранирования
+  # РЎРїРёСЃРѕРє СЃРёРјРІРѕР»РѕРІ РґР»СЏ СЌРєСЂР°РЅРёСЂРѕРІР°РЅРёСЏ
   special_chars <- c("_", "*")
   
-  # Разделяем текст на части по бектикам
+  # Р Р°Р·РґРµР»СЏРµРј С‚РµРєСЃС‚ РЅР° С‡Р°СЃС‚Рё РїРѕ Р±РµРєС‚РёРєР°Рј
   parts <- unlist(strsplit(text, "`", fixed = TRUE))
   
-  # Обрабатываем части: четные индексы - вне бектиков, нечетные - внутри
+  # РћР±СЂР°Р±Р°С‚С‹РІР°РµРј С‡Р°СЃС‚Рё: С‡РµС‚РЅС‹Рµ РёРЅРґРµРєСЃС‹ - РІРЅРµ Р±РµРєС‚РёРєРѕРІ, РЅРµС‡РµС‚РЅС‹Рµ - РІРЅСѓС‚СЂРё
   for (i in seq_along(parts)) {
-    # Если это часть вне бектиков (четный индекс при нумерации с 1)
+    # Р•СЃР»Рё СЌС‚Рѕ С‡Р°СЃС‚СЊ РІРЅРµ Р±РµРєС‚РёРєРѕРІ (С‡РµС‚РЅС‹Р№ РёРЅРґРµРєСЃ РїСЂРё РЅСѓРјРµСЂР°С†РёРё СЃ 1)
     if (i %% 2 == 1) {
-      # Экранируем специальные символы
+      # Р­РєСЂР°РЅРёСЂСѓРµРј СЃРїРµС†РёР°Р»СЊРЅС‹Рµ СЃРёРјРІРѕР»С‹
       for (char in special_chars) {
         parts[i] <- gsub(paste0(char), paste0("\\", char), parts[i], fixed = TRUE)
       }
     }
-    # Части внутри бектиков оставляем без изменений
+    # Р§Р°СЃС‚Рё РІРЅСѓС‚СЂРё Р±РµРєС‚РёРєРѕРІ РѕСЃС‚Р°РІР»СЏРµРј Р±РµР· РёР·РјРµРЅРµРЅРёР№
   }
   
-  # Собираем текст обратно, добавляя бектики между частями
+  # РЎРѕР±РёСЂР°РµРј С‚РµРєСЃС‚ РѕР±СЂР°С‚РЅРѕ, РґРѕР±Р°РІР»СЏСЏ Р±РµРєС‚РёРєРё РјРµР¶РґСѓ С‡Р°СЃС‚СЏРјРё
   result <- parts[1]
   if (length(parts) > 1) {
     for (i in 2:length(parts)) {
       if (i %% 2 == 0) {
-        # Добавляем бектик перед и после части внутри бектиков
+        # Р”РѕР±Р°РІР»СЏРµРј Р±РµРєС‚РёРє РїРµСЂРµРґ Рё РїРѕСЃР»Рµ С‡Р°СЃС‚Рё РІРЅСѓС‚СЂРё Р±РµРєС‚РёРєРѕРІ
         result <- paste0(result, "`", parts[i], "`")
       } else {
-        # Просто добавляем часть вне бектиков
+        # РџСЂРѕСЃС‚Рѕ РґРѕР±Р°РІР»СЏРµРј С‡Р°СЃС‚СЊ РІРЅРµ Р±РµРєС‚РёРєРѕРІ
         result <- paste0(result, parts[i])
       }
     }
@@ -74,24 +69,23 @@ escape_markdown <- function(text) {
   
   return(result)
 }
-print('str 72')
-# Создание сообщения
+
+# РЎРѕР·РґР°РЅРёРµ СЃРѕРѕР±С‰РµРЅРёСЏ
 message <- paste0(
-  "???? *Обновление Telegram бота отдела аналитики!*\n\n",
-  "_Что было доработано:_\n\n",
+  "рџљЂ *РћР±РЅРѕРІР»РµРЅРёРµ Telegram Р±РѕС‚Р° РѕС‚РґРµР»Р° Р°РЅР°Р»РёС‚РёРєРё!*\n\n",
+  "_Р§С‚Рѕ Р±С‹Р»Рѕ РґРѕСЂР°Р±РѕС‚Р°РЅРѕ:_\n\n",
   escape_markdown(commit_raw), "\n\n",
-  "??? Автор: ", author, "\n",
-  "??? Ветка: ", branch, "\n",
-  "??? *Pipeline:* [#", pipeline_id, "](", pipeline_url, ")\n\n",
+  "в—Џ РђРІС‚РѕСЂ: ", author, "\n",
+  "в—Џ Р’РµС‚РєР°: ", branch, "\n",
+  "в—Џ *Pipeline *Pipeline:* [#", pipeline_id, "](", pipeline_url, ")\n\n",
   "#netpeak_bi_bot\n"
 )
 
-# Отправка сообщения в Telegram
+# РћС‚РїСЂР°РІРєР° СЃРѕРѕР±С‰РµРЅРёСЏ РІ Telegram
 token <- Sys.getenv("TG_BOT_TOKEN")
 chat_id <- Sys.getenv("TG_CHAT_ID")
 url <- paste0("https://api.telegram.org/bot", token, "/sendMessage")
 
-print('str 89')
 if (!grepl('--test', x = commit_raw, ignore.case = T)) {
   
   response <- request(url) |>
@@ -102,14 +96,12 @@ if (!grepl('--test', x = commit_raw, ignore.case = T)) {
     ) |>
     req_perform()
   
-  # Проверка ответа
+  # РџСЂРѕРІРµСЂРєР° РѕС‚РІРµС‚Р°
   if (resp_status(response) != 200) {
-    cat("Ошибка при отправке сообщения: ", resp_body_string(response), "\n")
+    cat("РћС€РёР±РєР° РїСЂРё РѕС‚РїСЂР°РІРєРµ СЃРѕРѕР±С‰РµРЅРёСЏ: ", resp_body_string(response), "\n")
     quit(status = 1)
   } else {
-    cat("Сообщение успешно отправлено!\n")
+    cat("РЎРѕРѕР±С‰РµРЅРёРµ СѓСЃРїРµС€РЅРѕ РѕС‚РїСЂР°РІР»РµРЅРѕ!\n")
   }
   
 }
-
-
