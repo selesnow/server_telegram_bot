@@ -77,8 +77,8 @@ message <- paste0(
   escape_markdown(commit_raw), "\n\n",
   "● Автор: ", author, "\n",
   "● Ветка: ", branch, "\n",
-  "● *Pipeline *Pipeline:* [#", pipeline_id, "](", pipeline_url, ")\n\n",
-  "#bot\n"
+  "● *Pipeline *Pipeline:* [#", pipeline_id, "](", pipeline_url, ")\n\n"
+  #"#bot\n"
 )
 
 # Отправка сообщения в Telegram
