@@ -14,6 +14,8 @@ gitlab_url <- paste0("https://git.netpeak.net/api/v4/projects/", project_id, "/r
 print('str 14')
 print(project_id)
 print(commit_sha)
+print(gitlab_url)
+print(gitlab_token)
 commit_raw <- tryCatch({
   response <- request(gitlab_url) |>
     req_headers("PRIVATE-TOKEN" = gitlab_token) |>
@@ -28,6 +30,7 @@ commit_raw <- tryCatch({
 }, error = function(e) {
   "Ошибка при запросе API GitLab"
 })
+print(commit_raw)
 print('str 29')
 # Подготовка данных
 status <- Sys.getenv("CI_JOB_STATUS")
