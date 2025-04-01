@@ -5,7 +5,7 @@ stages:
   - update_code
   - start_bot
   - notify
-  - notify_fail_telegram
+  - notify_fail
 
 stop_bot:
   stage: stop_bot
@@ -75,7 +75,7 @@ notify:
   dependencies:
     - start_bot
 
-notify_fail_telegram:
+notify_fail:
   stage: notify_fail
   script:
     - Rscript ci_command/fail.R
