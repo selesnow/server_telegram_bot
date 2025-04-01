@@ -86,7 +86,7 @@ if (nrow(failed_jobs) == 0) {
     # 5. Формируем сообщение для Telegram
     message_text <- paste(
       "🚨 *Ошибка в GitLab CI/CD* 🚨\n",
-      "📌 *Проект:* netpeak\\_analytics/telegram_bot\n",
+      "📌 *Проект:* netpeak\\_analytics/telegram\\_bot\n",
       "🔢 *Pipeline:* [", pipeline_id, "](https://git.netpeak.net/netpeak_analytics/telegram_bot/-/pipelines/", pipeline_id, ")\n",
       "💀 *Job:* [", escape_markdown(job_name), "](https://git.netpeak.net/netpeak_analytics/telegram_bot/-/jobs/", job_id, ") (stage:", escape_markdown(job_stage), ")\n",
       "❌ *ID Job:*", job_id, "\n",
