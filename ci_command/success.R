@@ -12,6 +12,8 @@ commit_sha <- Sys.getenv("CI_COMMIT_SHA")
 print('str 12')
 gitlab_url <- paste0("https://git.netpeak.net/api/v4/projects/", project_id, "/repository/commits/", commit_sha)
 print('str 14')
+print(project_id)
+print(commit_sha)
 commit_raw <- tryCatch({
   response <- request(gitlab_url) |>
     req_headers("PRIVATE-TOKEN" = gitlab_token) |>
