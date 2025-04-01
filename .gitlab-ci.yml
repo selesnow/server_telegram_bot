@@ -5,6 +5,7 @@ stages:
   - update_code
   - start_bot
   - notify
+  - notify_fail_telegram
 
 stop_bot:
   stage: stop_bot
