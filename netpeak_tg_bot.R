@@ -20,17 +20,28 @@ Sys.setlocale("LC_CTYPE", "russian")
 # Включаем параллельный план вычислений
 future::plan('multisession')
 
+# config
+cfg <- read.config(here::here('config.cfg'))
+
+# check git branch
+# if master start production bot
+# if dev start test bot
+if (system("git rev-parse --abbrev-ref HEAD", intern = TRUE) == 'master') {
+  alert_chat_id <- cfg$info_chat$chat_id
+  bot_api_token <- cfg$bot_settings$bot_token
+} else {
+  alert_chat_id <- cfg$info_chat$test_chat_id
+  bot_api_token <- cfg$bot_settings$test_bot_token
+}
+
 # create bot instance
-updater <- Updater(token = bot_token("Netpeak BI Bot"))
+updater   <- Updater(token = bot_api_token)
 
 # очищаем старые обновления
 updater$bot$clean_updates()
 
 # имя бота
 botname <- updater$bot$getMe()$username
-
-# config
-cfg <- read.config(here::here('config.cfg'))
 
 # Read function
 source(here::here('db_bot_function.R'))
@@ -50,9 +61,11 @@ for (method in bot_methods) {
   source(here::here('R', method))
 }
 
-updater$bot$sendMessage(chat_id = cfg$info_chat$chat_id,
-                        text = str_glue('*Бот запущен* в {bot_start_time}\n\nid сессии: {get_session_id()}\nсервер: {get_ip()}'),
-                        parse_mode = 'Markdown')
+updater$bot$sendMessage(
+  chat_id = alert_chat_id,
+  text = str_glue('*Бот запущен* в {bot_start_time}\n\nid сессии: {get_session_id()}\nсервер: {get_ip()}'),
+  parse_mode = 'Markdown'
+)
 
 # ####################################
 # Filters  ###########################
@@ -146,16 +159,17 @@ tryCatch(
              entities     = FALSE)
 
     # бот для оповещения
-    bot <- Bot(token = bot_token("Netpeak BI Bot"))
+    bot <- Bot(token = bot_api_token)
+    
     # чат для оповещения
-    chat_id <- cfg$info_chat$chat_id
+    #chat_id <- cfg$info_chat$chat_id
 
     message("ID инфо чата: ", chat_id)
 
     # сообщение
     msg <- str_glue("*Бот упал*: _{err$message}_ {bot_crash_time}, общее время работы бота составило {round(bot_work_time, 2)} (мин.).")
 
-    bot$sendMessage(chat_id = chat_id,
+    bot$sendMessage(chat_id = alert_chat_id,
                     text = msg,
                     parse_mode = 'Markdown')
 
@@ -165,7 +179,7 @@ tryCatch(
     updater$bot$clean_updates()
 
     # чат для оповещения
-    chat_id <- cfg$info_chat$chat_id
+    #chat_id <- cfg$info_chat$chat_id
 
     # информация о том, что бот будет перезапущен
     bot$sendMessage(chat_id = chat_id,
