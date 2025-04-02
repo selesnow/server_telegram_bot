@@ -1,1 +1,0 @@
-R CMD BATCH --no-restore --no-save --no-environ C:\my_develop_workshop\telegram_bot\netpeak_tg_bot.R
