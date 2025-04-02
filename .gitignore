@@ -2,6 +2,7 @@ telegram_bot.Rproj
 telegram_bot (dev).Rproj
 .Rproj.user
 .Rhistory
+.RData
 *.Rout
 error_updater/*
 bot_db.db
