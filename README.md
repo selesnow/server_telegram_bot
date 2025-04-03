@@ -10,3 +10,6 @@ Telegram бот отдела аналитики на момент написан
 
 * Задачи на сервере (Alsey, Clarkson, Haruka)
 * Ошибки при сборе данных по PPC проектам (Alsey, PPC TL, nlo)
+
+## Документация к боту
+Вся документация к боту лежит в [Wiki](https://git.netpeak.net/netpeak_analytics/telegram_bot/-/wikis/home) репозитория.
