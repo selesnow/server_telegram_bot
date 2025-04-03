@@ -1,7 +1,9 @@
+# 2 ая версия CI/CD
+# теперь бот крутится как служба Windows
+
 stages:
   - stop_bot
   - install_packages
-  - kill_process
   - update_code
   - start_bot
   - notify
@@ -12,7 +14,7 @@ stop_bot:
   tags:
     - rpup_pak_updater
   script:
-    - schtasks /End /TN "alsey\netpeak_core\nc_analytics_team\als_tg_bot"
+    - nssm stop AnalyticsBot
   only:
     - master
   dependencies: []
@@ -28,17 +30,6 @@ deploy_packages:
   dependencies:
     - stop_bot
 
-kill_process:
-  stage: kill_process
-  tags:
-    - rpup_pak_updater
-  script:
-    - Rscript ci_command/proc_killer.R
-  only:
-    - master
-  dependencies:
-    - deploy_packages
-
 update_code:
   stage: update_code
   tags:
@@ -50,14 +41,14 @@ update_code:
   only:
     - master
   dependencies:
-    - kill_process
+    - deploy_packages
 
 start_bot:
   stage: start_bot
   tags:
     - rpup_pak_updater
   script:
-    - schtasks /Run /TN "alsey\netpeak_core\nc_analytics_team\als_tg_bot"
+    - nssm start AnalyticsBot
   only: 
     - master
   dependencies:
