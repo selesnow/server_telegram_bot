@@ -67,7 +67,7 @@ stop <- function(bot, update) {
           list(
             InlineKeyboardButton(
               text = 'Запустить бота', 
-              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=run&tkn={Sys.getenv("API_TOKEN")}')
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=start&tkn={Sys.getenv("API_TOKEN")}')
               )
             ),
           list(
@@ -79,7 +79,7 @@ stop <- function(bot, update) {
           list(
             InlineKeyboardButton(
               text = 'Перезапустить бота', 
-              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsAPI&action=restart&tkn={Sys.getenv("API_TOKEN")})')
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=restart&tkn={Sys.getenv("API_TOKEN")})')
             )
           )
           )
@@ -91,7 +91,7 @@ stop <- function(bot, update) {
                     reply_markup = IKM)
     
     # КОгда бот запущен как сервис остановка пулинга не работает
-    #updater$stop_polling()
+    updater$stop_polling()
     GET(str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=stop&tkn={Sys.getenv("API_TOKEN")}'))
     
     #quit("no")
