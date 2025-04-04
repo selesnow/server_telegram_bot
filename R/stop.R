@@ -61,24 +61,36 @@ stop <- function(bot, update) {
            session_duratin_min = round(bot_work_time, 2))
     
     
-    
     IKM <- InlineKeyboardMarkup(
       inline_keyboard =
         list(
           list(
-            InlineKeyboardButton(text = 'Запустить бота', url = str_glue('http://94.130.22.47:8000/run?task=alsey\\netpeak_core\\nc_analytics_team\\als_tg_bot&tkn={Sys.getenv("API_TOKEN")}'))
+            InlineKeyboardButton(
+              text = 'Запустить бота', 
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsAPI&action=run&tkn={Sys.getenv("API_TOKEN")}')
+              ),
+            InlineKeyboardButton(
+              text = 'Остановить бота', 
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsAPI&action=stop&tkn={Sys.getenv("API_TOKEN")}')
+            ),
+            InlineKeyboardButton(
+              text = 'Перезапустить бота', 
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsAPI&action=restart&tkn={Sys.getenv("API_TOKEN")})')
+            )
           )
         )
     )
     
     # Send Custom Keyboard
     bot$sendMessage(update$from_chat_id(),
-                    text = "Для запуска бота нажмите кнопку",
+                    text = "Меню управления ботом",
                     reply_markup = IKM)
     
-    updater$stop_polling()
+    # КОгда бот запущен как сервис остановка пулинга не работает
+    #updater$stop_polling()
+    GET(str_glue('http://94.130.22.47:8000/service?service=AnalyticsAPI&action=stop&tkn={Sys.getenv("API_TOKEN")}'))
     
-    quit("no")
+    #quit("no")
     #taskcheduler_stop('alsey\\als_tg_bot')
     
   } else {
