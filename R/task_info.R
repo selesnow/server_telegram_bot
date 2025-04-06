@@ -120,14 +120,14 @@ task_info <- function(bot, update, args) {
           .[length(.)]
         
         rout_path <- paste0(
-          '*Запрос полного лога:*',
-          '`/get_file {task$`Start In`}\\{r_file}out`',
-          '',
-          '*Лог:*',
-          '```',
-          log_text,
-          '```',
-          collapse = '\n'
+          '*Запрос полного лога:*', '\n',
+          '`/get_file ', task$`Start In`, '\\', r_file, 'out`', '\n',
+          '','\n',
+          '*Лог:*','\n',
+          '```', '\n',
+          log_text, '\n',
+          '```', '\n',
+          collapse = ''
           )
         
         bot$sendMessage(chat_id = update$from_chat_id(),
