@@ -119,17 +119,6 @@ task_info <- function(bot, update, args) {
         r_file    <- strsplit(unique(task$`Task To Run`), split = ' ')[[1]] %>% 
           .[length(.)]
         
-        # rout_path <- str_glue(
-        #   '*Запрос полного лога:*',
-        #   '`/get_file {task$`Start In`}\\{r_file}out`',
-        #   '',
-        #   '*Лог:*',
-        #   '```',
-        #   log_text,
-        #   '```',
-        #   .sep = '\n'
-        #   )
-        
         rout_path <- paste0(
           '*Запрос полного лога:*',
           '`/get_file {task$`Start In`}\\{r_file}out`',
@@ -137,9 +126,9 @@ task_info <- function(bot, update, args) {
           '*Лог:*',
           '```',
           log_text,
-          '```', 
+          '```',
           collapse = '\n'
-        )
+          )
         
         bot$sendMessage(chat_id = update$from_chat_id(),
                         parse_mode = "markdown",
@@ -221,7 +210,7 @@ find_log <- function(task_to_run = NULL, start_in = NULL, n_lines = 25) {
     # Выбор только последних n_lines строк
     last_lines <- tail(all_lines, n_lines)
     # Объединение в один текст
-    rout_file <- str_c(last_lines, collapse = '\n') %>% escape_markdown()
+    rout_file <- str_c(last_lines, collapse = '\n')
     
     return(rout_file)
     
@@ -234,7 +223,7 @@ find_log <- function(task_to_run = NULL, start_in = NULL, n_lines = 25) {
     # Выбор только последних n_lines строк
     last_lines <- tail(all_lines, n_lines)
     # Объединение в один текст
-    bat_file <- str_c(last_lines, collapse = '\n') %>% escape_markdown()
+    bat_file <- str_c(last_lines, collapse = '\n')
     
     bat_file <- str_glue(bat_file)
     
