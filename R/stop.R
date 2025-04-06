@@ -66,10 +66,16 @@ stop <- function(bot, update) {
         list(
           list(
             InlineKeyboardButton(
-              text = 'Запустить бота', 
-              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=start&tkn={Sys.getenv("API_TOKEN")}')
+              text = 'Server Task & Service Manager App', 
+              url = 'http://94.130.22.47:3838/'
               )
             ),
+          list(
+            InlineKeyboardButton(
+              text = 'Запустить бота', 
+              url = str_glue('http://94.130.22.47:8000/service?service=AnalyticsBot&action=start&tkn={Sys.getenv("API_TOKEN")}')
+            )
+          ),
           list(
             InlineKeyboardButton(
               text = 'Остановить бота', 

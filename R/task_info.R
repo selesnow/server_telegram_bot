@@ -109,13 +109,26 @@ task_info <- function(bot, update, args) {
                       text = txt)
       
       # запросить лог последнего выполнения
+      
       file_ext <- tools::file_ext(unique(trimws(task$`Task To Run`)))
+      
+      log_text <- find_log(unique(task$`Task To Run`), unique(task$`Start In`))
       
       if (tolower(file_ext) == 'r') {
         
         r_file    <- strsplit(unique(task$`Task To Run`), split = ' ')[[1]] %>% 
           .[length(.)]
-        rout_path <- str_glue('`/get_file {task$`Start In`}\\{r_file}out`')
+        
+        rout_path <- str_glue(
+          '*Запрос полного лога:*',
+          '`/get_file {task$`Start In`}\\{r_file}out`',
+          '',
+          '*Лог:*',
+          '```',
+          log_text,
+          '```',
+          .sep = '\n'
+          )
         
         bot$sendMessage(chat_id = update$from_chat_id(),
                         parse_mode = "markdown",
@@ -144,3 +157,81 @@ task_info <- function(bot, update, args) {
     }
   }
 }
+
+# Функция для корректировки telegram markdown
+escape_markdown <- function(text) {
+  # Список символов для экранирования
+  special_chars <- c("_", "*")
+  
+  # Разделяем текст на части по бектикам
+  parts <- unlist(strsplit(text, "`", fixed = TRUE))
+  
+  # Обрабатываем части: четные индексы - вне бектиков, нечетные - внутри
+  for (i in seq_along(parts)) {
+    # Если это часть вне бектиков (четный индекс при нумерации с 1)
+    if (i %% 2 == 1) {
+      # Экранируем специальные символы
+      for (char in special_chars) {
+        parts[i] <- gsub(paste0(char), paste0("\\", char), parts[i], fixed = TRUE)
+      }
+    }
+    # Части внутри бектиков оставляем без изменений
+  }
+  
+  # Собираем текст обратно, добавляя бектики между частями
+  result <- parts[1]
+  if (length(parts) > 1) {
+    for (i in 2:length(parts)) {
+      if (i %% 2 == 0) {
+        # Добавляем бектик перед и после части внутри бектиков
+        result <- paste0(result, "`", parts[i], "`")
+      } else {
+        # Просто добавляем часть вне бектиков
+        result <- paste0(result, parts[i])
+      }
+    }
+  }
+  
+  return(result)
+}
+
+# функция поиска и чтения лога
+find_log <- function(task_to_run = NULL, start_in = NULL, n_lines = 25) { 
+  file_ext <- tools::file_ext(unique(trimws(task_to_run)))
+  
+  if (tolower(file_ext) == 'r') {
+    
+    r_file    <- strsplit(unique(task_to_run), split = ' ')[[1]] %>% 
+      .[length(.)]
+    rout_path <- str_glue('{start_in}\\{r_file}out')
+    
+    # Чтение всех строк файла
+    all_lines <- readLines(unique(rout_path))
+    # Выбор только последних n_lines строк
+    last_lines <- tail(all_lines, n_lines)
+    # Объединение в один текст
+    rout_file <- str_c(last_lines, collapse = '\n') %>% escape_markdown()
+    
+    return(rout_file)
+    
+  }
+  
+  if (tolower(file_ext) == 'bat') {
+    
+    # Чтение всех строк файла
+    all_lines <- readLines(unique(task_to_run))
+    # Выбор только последних n_lines строк
+    last_lines <- tail(all_lines, n_lines)
+    # Объединение в один текст
+    bat_file <- str_c(last_lines, collapse = '\n') %>% escape_markdown()
+    
+    bat_file <- str_glue(bat_file)
+    
+    return(bat_file)
+    
+  }
+  
+  return('Лог не найден!')
+  
+}
+
