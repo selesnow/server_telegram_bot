@@ -119,16 +119,27 @@ task_info <- function(bot, update, args) {
         r_file    <- strsplit(unique(task$`Task To Run`), split = ' ')[[1]] %>% 
           .[length(.)]
         
-        rout_path <- str_glue(
+        # rout_path <- str_glue(
+        #   '*Запрос полного лога:*',
+        #   '`/get_file {task$`Start In`}\\{r_file}out`',
+        #   '',
+        #   '*Лог:*',
+        #   '```',
+        #   log_text,
+        #   '```',
+        #   .sep = '\n'
+        #   )
+        
+        rout_path <- paste0(
           '*Запрос полного лога:*',
           '`/get_file {task$`Start In`}\\{r_file}out`',
           '',
           '*Лог:*',
           '```',
           log_text,
-          '```',
-          .sep = '\n'
-          )
+          '```', 
+          collapse = '\n'
+        )
         
         bot$sendMessage(chat_id = update$from_chat_id(),
                         parse_mode = "markdown",
