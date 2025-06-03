@@ -6,3 +6,4 @@ telegram_bot (dev).Rproj
 *.Rout
 error_updater/*
 bot_db.db
+desktop.ini
