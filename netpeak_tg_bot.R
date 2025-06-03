@@ -57,6 +57,7 @@ lg$log(level = 'sessions',
 # Commands #####################
 bot_methods <- dir(here::here("R"))
 for (method in bot_methods) {
+  if (tools::file_ext(method) != 'R') next
   print(here::here('R', method))
   source(here::here('R', method))
 }
