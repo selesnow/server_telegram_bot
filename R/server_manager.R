@@ -9,19 +9,27 @@ server_manager <- function(bot, update) {
   ngrok_url <- ngrok_info$tunnels[[1]]$public_url
   
   # Создаём inline кнопку для запуска
-  appIKM <- InlineKeyboardMarkup(
-    inline_keyboard = list(
-      list(
-        InlineKeyboardButton(text = 'Server Manager', web_app = ngrok_url)
+  if (update$message$chat$type == "private") {
+    appIKM <- InlineKeyboardMarkup(
+      inline_keyboard = list(
+        list(
+          InlineKeyboardButton(text = 'Server Manager', web_app = ngrok_url)
+        )
       )
     )
-  )
-  
-  # Send Inline Keyboard
-  bot$sendMessage(
-    chat_id = update$from_chat_id(), 
-    text = "Запуск Server Manager", 
-    reply_markup = appIKM
-  )
+    
+    # Send Inline Keyboard
+    bot$sendMessage(
+      chat_id = update$from_chat_id(), 
+      text = "Запуск Server Manager", 
+      reply_markup = appIKM
+    )
+  } else {
+    # Send Inline Keyboard
+    bot$sendMessage(
+      chat_id = update$from_chat_id(), 
+      text = "Web App можно запускать только в приватных чатах."
+    )
+  }
   
 }

@@ -51,20 +51,36 @@ start <- function(bot, update) {
   # Áåğ¸ì ïåğâûé HTTPS òóííåëü
   ngrok_url <- ngrok_info$tunnels[[1]]$public_url
   
-  RKM <- ReplyKeyboardMarkup(
-    keyboard = list(
-      list(KeyboardButton("Server Manager", web_app = ngrok_url)),
-      list(KeyboardButton("Ïîñòàâèòü çàäà÷ó")),
-      list(KeyboardButton("Ïîìîùü")),
-      list(KeyboardButton("Ñïèñîê çàäà÷")),
-      list(KeyboardButton("Ìåíş çàïóñêà çàäà÷")),
-      list(KeyboardButton("Òèõèå çàäà÷è")),
-      list(KeyboardButton("Ïîëíûé ñïèñîê çàäà÷")),
-      list(KeyboardButton("Ïîëó÷èòü id ÷àòà"))
-    ),
-    resize_keyboard = TRUE,
-    one_time_keyboard = FALSE
-  )
+  if (update$message$chat$type == "private") {
+    RKM <- ReplyKeyboardMarkup(
+      keyboard = list(
+        list(KeyboardButton("Server Manager", web_app = ngrok_url)),
+        list(KeyboardButton("Ïîñòàâèòü çàäà÷ó")),
+        list(KeyboardButton("Ïîìîùü")),
+        list(KeyboardButton("Ñïèñîê çàäà÷")),
+        list(KeyboardButton("Ìåíş çàïóñêà çàäà÷")),
+        list(KeyboardButton("Òèõèå çàäà÷è")),
+        list(KeyboardButton("Ïîëíûé ñïèñîê çàäà÷")),
+        list(KeyboardButton("Ïîëó÷èòü id ÷àòà"))
+      ),
+      resize_keyboard = TRUE,
+      one_time_keyboard = FALSE
+    )
+  } else {
+    RKM <- ReplyKeyboardMarkup(
+      keyboard = list(
+        list(KeyboardButton("Ïîñòàâèòü çàäà÷ó")),
+        list(KeyboardButton("Ïîìîùü")),
+        list(KeyboardButton("Ñïèñîê çàäà÷")),
+        list(KeyboardButton("Ìåíş çàïóñêà çàäà÷")),
+        list(KeyboardButton("Òèõèå çàäà÷è")),
+        list(KeyboardButton("Ïîëíûé ñïèñîê çàäà÷")),
+        list(KeyboardButton("Ïîëó÷èòü id ÷àòà"))
+      ),
+      resize_keyboard = TRUE,
+      one_time_keyboard = FALSE
+    ) 
+  }
   
   # Send Custom Keyboard
   bot$sendMessage(update$from_chat_id(),
