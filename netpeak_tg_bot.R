@@ -14,6 +14,8 @@ library(purrr)
 library(lubridate)
 library(future)
 library(promises)
+library(httr2)
+library(jsonlite)
 
 Sys.setlocale("LC_CTYPE", "russian")
 
@@ -120,7 +122,8 @@ updater <-
      h_get_template +
      m_template +
      h_cmd +
-     h_get_user_info
+     h_get_user_info +
+     h_server_manager
 
 ##################
 # start bot

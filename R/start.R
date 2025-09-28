@@ -1,6 +1,6 @@
 ## start menu command
 start <- function(bot, update) {
-  
+
   # write userdata
   add_user(update)
   
@@ -43,8 +43,18 @@ start <- function(bot, update) {
             update$from_user_id(),
             'start')
   
+  # Получаем сактуальную ссылку на приложение
+  ngrok_info <- request("http://127.0.0.1:4040/api/tunnels") %>%
+    req_perform() %>%
+    resp_body_json()
+  
+  # Берём первый HTTPS туннель
+  ngrok_url <- ngrok_info$tunnels[[1]]$public_url
+  
   RKM <- ReplyKeyboardMarkup(
     keyboard = list(
+      list(KeyboardButton("Server Manager", web_app = ngrok_url)),
+      list(KeyboardButton("Поставить задачу")),
       list(KeyboardButton("Помощь")),
       list(KeyboardButton("Список задач")),
       list(KeyboardButton("Меню запуска задач")),

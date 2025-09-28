@@ -31,6 +31,7 @@ h_get_file          <- CommandHandler("get_file", get_file, pass_args = TRUE)
 h_get_template      <- CommandHandler("get_template", get_template, username = botname)
 h_cmd               <- CommandHandler('cmd', cmd, username = botname)
 h_get_user_info     <- CommandHandler('get_user_info', get_user_info, pass_args = TRUE, username = botname)
+h_server_manager    <- CommandHandler('server_manager', server_manager, username = botname)
 inline_handler      <- CallbackQueryHandler(answer_cb)
 
 ## messange handers
