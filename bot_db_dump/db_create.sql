@@ -31,6 +31,10 @@ CREATE TABLE chat_state (
 
 CREATE TABLE forget_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, task_name TEXT, quiet_till DATETIME NOT NULL);
 
+-- autofix_disable_queue definition
+
+CREATE TABLE autofix_disable_queue (id INTEGER PRIMARY KEY AUTOINCREMENT, task_name TEXT, disable_till DATETIME NOT NULL);
+
 -- log_entities definition
 
 CREATE TABLE log_entities (

@@ -93,6 +93,9 @@ updater <-
      forget_handler +
      unforget_handler +
      quite_tasks_handler +
+     autofix_disable_handler +
+     autofix_enable_handler +
+     quite_autofixes_handler +
      m_quite_tasks_handler +
      task_list_handler +
      m_task_list_handler +
