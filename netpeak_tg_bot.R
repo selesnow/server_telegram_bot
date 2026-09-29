@@ -126,7 +126,8 @@ updater <-
      m_template +
      h_cmd +
      h_get_user_info +
-     h_server_manager
+     h_server_manager +
+     gemini_handler
 
 ##################
 # start bot

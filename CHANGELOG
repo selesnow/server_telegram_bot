@@ -1,3 +1,10 @@
+## 2026-09-29 | GEMINI CLI (Alsey)
+* Добавлена новая команда `/gemini` для выполнения запросов к Gemini CLI в неинтерактивном режиме.
+* Добавлена проверка привилегии `ai` для выполнения команды `/gemini`.
+* Создан специализированный навык `telegram-sender` для отправки форматированных ответов через Telegram Bot API с использованием `telegramify_markdown`.
+* Зарегистрирован обработчик `gemini_handler` в `handlers.R` и `netpeak_tg_bot.R`.
+* Обновлен список команд в `commands.txt`.
+
 ## 2026-09-22 | GEMINI CLI (Alsey)
 * Добавлен новый функционал `autofix_disable` для отключения автофикса упавших задач.
 * Создана новая таблица `autofix_disable_queue` в SQLite БД бота.
