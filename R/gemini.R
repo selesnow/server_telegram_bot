@@ -58,8 +58,14 @@ gemini <- function(bot, update, args) {
     return()
   }
 
+  # Извлекаем текст запроса: из оригинального сообщения с сохранением переносов строк или из args
+  user_query <- sub("^/gemini(@\\w+)?\\s*", "", msg$text)
+  if (is.null(user_query) || is.na(user_query) || nchar(trimws(user_query)) == 0) {
+    user_query <- paste(args, collapse = " ")
+  }
+
   # Проверка аргументов
-  if ( length(args) == 0 ) {
+  if ( length(args) == 0 && nchar(trimws(user_query)) == 0 ) {
     bot$sendMessage(
       chat_id    = update$from_chat_id(),
       parse_mode = "html",
@@ -67,9 +73,6 @@ gemini <- function(bot, update, args) {
     )
     return()
   }
-
-  # Извлекаем текст запроса, объединяя аргументы через пробел
-  user_query <- paste(args, collapse = " ")
 
   # Отправляем предварительный статус
   msg_wait <- bot$sendMessage(
@@ -93,9 +96,18 @@ gemini <- function(bot, update, args) {
     tryCatch({
       current_user <- Sys.getenv("USERNAME", "Alsey")
       user_email   <- paste0("gemini_cli_", tolower(current_user), "@netpeak.group")
-      git_env      <- str_glue("set GIT_AUTHOR_NAME=Gemini CLI ({current_user}) && set GIT_AUTHOR_EMAIL={user_email} && set GIT_COMMITTER_NAME=Gemini CLI ({current_user}) && set GIT_COMMITTER_EMAIL={user_email}")
+
+      # Устанавливаем переменные окружения для git
+      Sys.setenv(
+        GIT_AUTHOR_NAME     = paste0("Gemini CLI (", current_user, ")"),
+        GIT_AUTHOR_EMAIL    = user_email,
+        GIT_COMMITTER_NAME  = paste0("Gemini CLI (", current_user, ")"),
+        GIT_COMMITTER_EMAIL = user_email
+      )
 
       work_dir <- "C:\\scripts"
+      old_wd   <- setwd(work_dir)
+      on.exit(setwd(old_wd), add = TRUE)
 
       # Очищаем кавычки в запросе пользователя
       clean_query <- str_replace_all(user_query, '"', "'")
@@ -114,15 +126,26 @@ gemini <- function(bot, update, args) {
         "Ты обязан завершить выполнение отправкой сообщения через этот навык."
       )
 
-      # Экранируем двойные кавычки для безопасной передачи в cmd
-      cmd_prompt_escaped <- str_replace_all(cmd_prompt, '"', '\\\\"')
-
-      # Строим команду cmd
-      cmd <- str_glue('{git_env} && cd /d "{work_dir}" && gemini --skip-trust --approval-mode=yolo -p "{cmd_prompt_escaped}"')
+      # Аргументы командной строки
+      cli_args <- c(
+        "--skip-trust",
+        "--approval-mode=yolo",
+        "-p",
+        shQuote(cmd_prompt, type = "cmd")
+      )
 
       cat("\n[GEMINI] Запуск команды для чата", target_chat_id, "\n")
-      shell_res <- shell(cmd)
-      cat("[GEMINI] Завершено с кодом:", shell_res, "\n")
+      res_code <- system2(
+        command = "gemini.cmd",
+        args    = cli_args,
+        stdout  = "",
+        stderr  = ""
+      )
+      cat("[GEMINI] Завершено с кодом:", res_code, "\n")
+
+      if (res_code != 0) {
+        stop(str_glue("Процесс Gemini CLI завершился с кодом ошибки {res_code}"))
+      }
 
       # Удаляем сообщение ожидания, если оно ещё не было удалено скриптом навыка
       try({
