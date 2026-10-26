@@ -29,12 +29,16 @@ cfg <- read.config(here::here('config.cfg'))
 # if master start production bot
 # if dev start test bot
 if (system("git rev-parse --abbrev-ref HEAD", intern = TRUE) == 'master') {
+  bot_name <- cfg$bot_settings$bot_name
   alert_chat_id <- cfg$info_chat$chat_id
-  bot_api_token <- cfg$bot_settings$bot_token
 } else {
+  bot_name <- cfg$bot_settings$test_bot_name
   alert_chat_id <- cfg$info_chat$test_chat_id
-  bot_api_token <- cfg$bot_settings$test_bot_token
 }
+
+# token is stored in env var R_TELEGRAM_BOT_<bot_name>
+bot_api_token <- bot_token(bot_name)
+if (!nzchar(bot_api_token)) stop('Env var R_TELEGRAM_BOT_', bot_name, ' is not set')
 
 # create bot instance
 updater   <- Updater(token = bot_api_token)
