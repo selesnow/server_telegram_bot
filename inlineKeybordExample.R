@@ -1,7 +1,7 @@
 
 # ################
 library(telegram.bot)
-updater <- Updater(token = "***REMOVED***")
+updater <- Updater(token = bot_token("TestBot"))
 
 
 #updater <- Updater(token = "12345:ABCDE")

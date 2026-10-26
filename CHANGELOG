@@ -2,6 +2,8 @@
 * Токены ботов убраны из `config.cfg` и `bot_example/config.cfg`: в конфиге теперь хранятся только имена ботов (`bot_name`, `test_bot_name`).
 * Токен читается из переменной среды `R_TELEGRAM_BOT_<имя бота>` через `telegram.bot::bot_token()` (`Netpeak BI Bot` для ветки `master`, `TestBot` для остальных веток).
 * В `netpeak_tg_bot.R` добавлена проверка: если переменная среды не задана, бот останавливается с понятным сообщением.
+* В `inlineKeybordExample.R` зашитый в код токен заменён на `bot_token("TestBot")`.
+* Удалена неиспользуемая папка `bot_example`.
 
 ## 2026-10-24 | GEMINI CLI (Alsey)
 * В методе `gemini` вызов команды заменен с `shell()` на `system2()` с безопасным экранированием через `shQuote(..., type = 'cmd')`.
