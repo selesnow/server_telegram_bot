@@ -5,7 +5,7 @@
 * В `inlineKeybordExample.R` зашитый в код токен заменён на `bot_token("TestBot")`.
 * Удалена неиспользуемая папка `bot_example`.
 * CI/CD: в задаче `update_code` вместо `git pull` используется `git fetch` + `git reset --hard origin/master`, чтобы деплой не падал после переписывания истории.
-* История репозитория очищена от токенов ботов.
+* История репозитория очищена от токенов ботов и от файлов с данными (`bot_db.db`, `*.rds`, `.RData`, `error_updater/`); в `.gitignore` добавлены `*.db`, `*.sqlite`, `*.rds`.
 
 ## 2026-10-24 | GEMINI CLI (Alsey)
 * В методе `gemini` вызов команды заменен с `shell()` на `system2()` с безопасным экранированием через `shQuote(..., type = 'cmd')`.
